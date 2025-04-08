@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct paytrack_test1App: App {
@@ -13,5 +14,6 @@ struct paytrack_test1App: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: Transaction.self)
     }
 }
