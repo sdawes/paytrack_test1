@@ -12,8 +12,10 @@ struct ContentView: View {
     @Environment(\.modelContext) var modelContext // m context is memory, m content is storage
     @Query var transactions: [Transaction]
 
+    @State private var navPath = [Transaction]()
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navPath) {
             List {
                 ForEach(transactions) { transaction in
                     NavigationLink(value: transaction) {
@@ -36,22 +38,8 @@ struct ContentView: View {
                 EditTransactionView(transaction: transaction)
             }
             .toolbar {
-                Button("Add Samples", action: addSampleData)
+                Button("Add Transaction", action: addNewTransaction)
             }
-        }
-    }
-
-    private func addSampleData() {
-        let sampleTransactions = [
-            Transaction(name: "Groceries", amount: 50.0, date: Date(), category: "Food"),
-            Transaction(name: "Amazon", amount: 100.0, date: Date(), category: "Shopping"),
-            Transaction(name: "Netflix", amount: 15.0, date: Date(), category: "Entertainment"),
-            Transaction(name: "Gym", amount: 20.0, date: Date(), category: "Fitness"),
-            Transaction(name: "Dinner", amount: 30.0, date: Date(), category: "Food")
-        ]
-
-        for transaction in sampleTransactions {
-            modelContext.insert(transaction)
         }
     }
 
@@ -59,6 +47,12 @@ struct ContentView: View {
         indexSet.forEach { index in
             modelContext.delete(transactions[index])
         }
+    }
+    
+    func addNewTransaction() {
+        let transaction = Transaction(name: "New Restaurant", amount: 50, date: Date(), category: "Food")
+        modelContext.insert(transaction)
+        navPath = [transaction]
     }
 }
 

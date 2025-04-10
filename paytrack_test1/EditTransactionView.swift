@@ -27,13 +27,19 @@ struct EditTransactionView: View {
     // Create a model container configuration for in-memory storage
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     
-    // Create a model container
-    let container = try! ModelContainer(for: Transaction.self, configurations: config)
-    
-    // Insert the sample transaction into the model context
-    container.mainContext.insert(sampleTransaction)
-    
-    // Return the view with the model container
-    return EditTransactionView(transaction: sampleTransaction)
-        .modelContainer(container)
+    do {
+        // Create a model container
+        let container = try ModelContainer(for: Transaction.self, configurations: config)
+        
+        // Insert the sample transaction into the model context
+        container.mainContext.insert(sampleTransaction)
+        
+        // Return the view with the model container
+        return EditTransactionView(transaction: sampleTransaction)
+            .modelContainer(container)
+    } catch {
+        // Handle the error, e.g., by returning an empty view or logging the error
+        print("Failed to create model container: \(error)")
+        return EmptyView()
+    }
 }
